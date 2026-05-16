@@ -1,0 +1,191 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "SmewAI",
+  "colors": {
+    "primary": "#16A34A",
+    "light": "#07C983",
+    "dark": "#15803D"
+  },
+  "favicon": {
+    "light": "/favicon.svg",
+    "dark": "/favicon.svg"
+  },
+  "navigation": {
+    "global": {
+      "anchors": [
+        {
+          "anchor": "免费注册 / Sign-up",
+          "href": "https://smew.ai/register",
+          "icon": "book-open-cover",
+          "color": {
+            "light": "#E55D2B",
+            "dark": "#E55D2B"
+          }
+        }
+      ]
+    },
+    "languages": [
+      {
+        "language": "zh",
+        "default": true,
+        "tabs": [
+          {
+            "tab": "Agent 接入",
+            "dropdowns": [
+              {
+                "dropdown": ""
+              }
+            ],
+            "groups": [
+              {
+                "group": "开始使用",
+                "pages": [
+                  "file"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "图片生成"
+          },
+          {
+            "tab": "SmewAI 文档",
+            "groups": [
+              {
+                "group": "站点介绍",
+                "pages": [
+                  "zh/dragon-docs/introduction",
+                  "zh/dragon-docs/faq",
+                  "zh/dragon-docs/dragon-code-guide"
+                ]
+              },
+              {
+                "group": "环境准备",
+                "pages": [
+                  "zh/dragon-docs/nodejs-setup",
+                  "zh/dragon-docs/auto-config-tool"
+                ]
+              },
+              {
+                "group": "快速接入",
+                "pages": [
+                  "zh/dragon-docs/claude-code-quickstart",
+                  "zh/dragon-docs/codex-quickstart",
+                  "zh/dragon-docs/openclaw-quickstart",
+                  "zh/dragon-docs/hermes-quickstart",
+                  "zh/dragon-docs/cherry-studio-quickstart",
+                  "zh/dragon-docs/claude-desktop-configuration",
+                  "zh/dragon-docs/gpt-image-quickstart"
+                ]
+              },
+              {
+                "group": "进阶指南",
+                "pages": [
+                  "zh/dragon-docs/vscode-gui-guide",
+                  "zh/dragon-docs/claude-code-codex-collaboration-guide",
+                  "zh/dragon-docs/recommended-global-rules"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "en",
+        "tabs": [
+          {
+            "tab": "Agent 接入",
+            "groups": [
+              {
+                "group": "Getting started",
+                "pages": [
+                  "index",
+                  "quickstart",
+                  "development"
+                ]
+              },
+              {
+                "group": "Customization",
+                "pages": [
+                  "essentials/settings",
+                  "essentials/navigation"
+                ]
+              },
+              {
+                "group": "Writing content",
+                "pages": [
+                  "essentials/markdown",
+                  "essentials/code",
+                  "essentials/images",
+                  "essentials/components",
+                  "essentials/reusable-snippets"
+                ]
+              },
+              {
+                "group": "Agent ready",
+                "pages": [
+                  "agent-ready/prompt",
+                  "agent-ready/visibility",
+                  "agent-ready/contextual",
+                  "ai-tools/cursor",
+                  "ai-tools/claude-code",
+                  "ai-tools/windsurf"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API reference",
+            "groups": [
+              {
+                "group": "API documentation",
+                "pages": [
+                  "api-reference/introduction"
+                ]
+              },
+              {
+                "group": "Endpoint examples",
+                "pages": [
+                  "api-reference/endpoint/get",
+                  "api-reference/endpoint/create",
+                  "api-reference/endpoint/delete",
+                  "api-reference/endpoint/webhook"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://dashboard.mintlify.com"
+    }
+  },
+  "contextual": {
+    "options": [
+     "copy",
+     "view",
+     "chatgpt",
+     "claude",
+     "perplexity",
+     "mcp",
+     "cursor",
+     "vscode"
+   ]
+  },
+  "footer": {
+    "socials": {
+      "linkedin": "https://linkedin.com/company/mintlify"
+    }
+  }
+}

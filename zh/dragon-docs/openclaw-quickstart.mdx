@@ -1,0 +1,199 @@
+---
+title: "OpenClaw 快速开始指南"
+sidebarTitle: "OpenClaw 快速开始指南"
+description: "OpenClaw 快速开始指南"
+---
+
+# SmewAI × OpenClaw 快速开始指南
+
+## 适用场景
+
+这篇文档只解决一件事：把 OpenClaw 的模型服务接到 SmewAI，并完成一次可用性验证。
+
+如果你还没安装 Node.js，请先参考 [Node.js 环境安装指南](nodejs-setup)。
+
+---
+
+## 1. 准备事项
+
+开始前请先确认以下几点：
+
+- 你已经在 [SmewAI 控制台](https://smew.ai/keys) 创建好一枚 API Key
+- 你知道要调用的实际模型名，例如 `gpt-5.4`
+- 你的运行环境满足 OpenClaw 官方要求：推荐 `Node 24`，兼容 `Node 22.16+`
+- Windows 用户建议优先使用 `WSL2 + Ubuntu` 安装和运行 OpenClaw
+
+---
+
+## 支持的模型
+
+| 模型名 |
+| --- |
+| `gpt-5.4` |
+| `gpt-5.3-codex` |
+| `gpt-5.2` |
+| `gpt-5.2-codex` |
+| `gpt-5.1-codex-max` |
+| `gpt-5.1-codex-mini` |
+
+## 2. 推荐路径：使用 OpenClaw 向导接入
+
+如果你只是想先打通 OpenClaw 和 SmewAI，最省事的方式是先跑 OpenClaw 自带向导，等浏览器控制台能正常回复后，再继续配置频道或后台常驻。
+
+### 第一步：安装 OpenClaw
+
+```bash
+curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-onboard
+```
+
+安装完成后，可先验证命令是否可用：
+
+```bash
+openclaw --help
+```
+
+### 第二步：启动接入向导
+
+```bash
+openclaw onboard
+```
+
+### 第三步：在向导中选择自定义服务商
+
+当向导进入模型和鉴权步骤时，选择 `Custom provider`，然后按下面的值填写：
+
+| 字段 | 填写值 |
+| --- | --- |
+| 兼容类型 | `OpenAI-compatible` |
+| 基础地址 | `https://smew.ai/v1` |
+| 模型名 | `gpt-5.4` |
+| Provider ID | `smewai` |
+| API Key | 你创建的 SmewAI API Key |
+
+### 第四步：完成向导并验证
+
+首次接入时，网关端口、绑定方式和后台常驻服务都可以先保留默认值。完成向导后，依次运行：
+
+```bash
+openclaw doctor
+openclaw status
+openclaw dashboard
+```
+
+如果控制台里发消息能收到模型回复，说明接入已经成功。
+
+---
+
+## 3. 脚本化接入
+
+如果你要把 OpenClaw 初始化写进脚本、服务器部署流程或企业镜像，推荐使用非交互模式。
+
+### 第一步：导出 API Key
+
+```bash
+export CUSTOM_API_KEY="YOUR_SMEWAI_API_KEY"
+```
+
+### 第二步：执行非交互接入命令
+
+```bash
+openclaw onboard --non-interactive \
+  --mode local \
+  --auth-choice custom-api-key \
+  --custom-base-url "https://smew.ai/v1" \
+  --custom-model-id "gpt-5.4" \
+  --custom-provider-id "smewai" \
+  --custom-compatibility openai \
+  --secret-input-mode ref \
+  --gateway-port 18789 \
+  --gateway-bind loopback
+```
+
+### 第三步：确认环境变量名称
+
+如果你使用了 `--secret-input-mode ref`，OpenClaw 当前版本通常会把 API Key 以环境变量引用方式保存。推荐直接使用上面的 `CUSTOM_API_KEY`。
+
+如果你已经生成了配置，也可以打开 `~/.openclaw/openclaw.json` 检查实际引用的变量名；如果你的版本写入的是别的变量名，再按实际配置补环境变量即可，例如：
+
+```bash
+export OPENAI_API_KEY="YOUR_SMEWAI_API_KEY"
+```
+
+---
+
+## 4. 手动检查或手动写入配置
+
+如果你不想跑向导，也可以直接检查或编辑 `~/.openclaw/openclaw.json`。
+
+下面是一份可直接参考的配置示例，请把模型名和 API Key 变量替换成你自己的实际值：
+
+```json5
+{
+  agents: {
+    defaults: {
+      model: { primary: "smewai/gpt-5.4" },
+    },
+  },
+  models: {
+    providers: {
+      smewai: {
+        baseUrl: "https://smew.ai/v1",
+        apiKey: "${CUSTOM_API_KEY}",
+        api: "openai-completions",
+        models: [
+          {
+            id: "gpt-5.4",
+            name: "gpt-5.4",
+          },
+        ],
+      },
+    },
+  },
+}
+```
+
+> **最容易写错的地方**：默认模型必须写成 `smewai/模型名`，例如 `smewai/gpt-5.4`，不能只写 `gpt-5.4`。
+
+---
+
+## 5. 成功标准
+
+满足下面几项，基本就说明接入已经打通：
+
+- 基础地址填写的是 `https://smew.ai/v1`
+- API Key 仍然有效，未过期、未停用、未耗尽额度
+- 默认模型写成了 `smewai/你的模型名`
+- `openclaw doctor` 和 `openclaw status` 没有报配置错误
+- 浏览器控制台能正常发消息并收到回复
+
+---
+
+## 6. 常见问题
+
+### 明明填了地址，还是连不上
+
+优先检查基础地址是不是 `https://smew.ai/v1`。
+
+### OpenClaw 能启动，但发消息时报模型不存在
+
+通常先查这两项：
+
+- 你填写的模型名是否就是 SmewAI 当前实际开放的调用名
+- 默认模型是否写成了 `smewai/模型名`，而不是只写模型名
+
+### 使用脚本化命令时提示 API Key 缺失
+
+这通常是环境变量没有真正导出成功，或者变量名和 OpenClaw 配置里引用的不一致。
+
+### 我已经配好 OpenClaw，为什么还不能在 WhatsApp 或 Telegram 里用
+
+这通常不是模型接入问题，而是频道还没有配置完成。本页只负责把 OpenClaw 和 SmewAI 之间的模型调用打通；频道配置请继续参考 [OpenClaw 官方 Channels 文档](https://docs.openclaw.ai/channels)。
+
+---
+
+## 7. 下一步
+
+- 还没创建 Key：回到 [SmewAI 控制台](https://smew.ai/keys) 先创建 API Key
+- 想先配置其他开发工具：继续查看 [Codex 快速开始指南](codex-quickstart)
+- 需要安装运行环境：查看 [Node.js 环境安装指南](nodejs-setup)
+- 遇到常见接入问题：查看 [常见问题](faq)

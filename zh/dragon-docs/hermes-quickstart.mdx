@@ -1,0 +1,123 @@
+---
+title: "Hermes 快速开始指南"
+sidebarTitle: "Hermes 快速开始指南"
+description: "Hermes 快速开始指南"
+---
+
+# SmewAI × Hermes 快速开始指南
+
+## 适用场景
+
+这篇文档只解决一件事：把 SmewAI 的 **OpenAI 兼容 GPT 接口** 接到 Hermes，并完成一次最小可用验证。
+
+---
+
+## 1. 准备事项
+
+开始前请先确认以下几点：
+
+- 你已经在 [SmewAI 控制台](https://smew.ai/keys) 创建好一枚 API Key
+- 你知道 Hermes 当前要调用的实际模型名
+- 你可以编辑 Hermes 的配置文件 `config.yaml`
+- 你本次接入走的是 **OpenAI 兼容端点**
+
+## 2. 支持的模型
+
+当前文档优先覆盖 GPT 系列模型接入，常见模型名如下：
+
+| 模型名 |
+| --- |
+| `gpt-5.4` |
+| `gpt-5.3-codex` |
+| `gpt-5.2` |
+
+## 3. 推荐路径：通过 Hermes 的 `custom_providers` 接入
+
+### 第一步：定义自定义 provider
+
+```yaml
+custom_providers:
+  - name: custom-smewai
+    base_url: https://smew.ai/v1
+    api_key: <your-key>
+    api_mode: openai_chat_completions
+    models:
+      - gpt-5.4
+```
+
+### 第二步：把默认模型指向这个 provider
+
+```yaml
+model:
+  default: gpt-5.4
+  provider: custom-smewai
+  base_url: https://smew.ai/v1
+  api_key: <your-key>
+  api_mode: openai_chat_completions
+```
+
+### 第三步：关闭 Smart Model Routing
+
+```yaml
+smart_model_routing:
+  enabled: false
+```
+
+## 4. 最小可用配置
+
+```yaml
+model:
+  default: gpt-5.4
+  provider: custom-smewai
+  base_url: https://smew.ai/v1
+  api_key: <your-key>
+  api_mode: openai_chat_completions
+
+custom_providers:
+  - name: custom-smewai
+    base_url: https://smew.ai/v1
+    api_key: <your-key>
+    api_mode: openai_chat_completions
+    models:
+      - gpt-5.4
+
+smart_model_routing:
+  enabled: false
+```
+
+## 5. 成功标准
+
+- `base_url` 填写的是 `https://smew.ai/v1`
+- `api_mode` 填写的是 `openai_chat_completions`
+- `model.provider` 指向的是你在 `custom_providers` 中定义的 provider 名
+- `smart_model_routing.enabled` 已关闭
+- Hermes 发起消息后，实际能正常收到模型回复
+
+## 6. 常见问题
+
+### 为什么返回 401？
+
+通常先查这几项：
+
+- API Key 是否有效
+- `api_key` 是否填到了 `model` 和 `custom_providers` 需要的位置
+- Hermes 当前是否真的加载到了你修改后的配置文件
+
+### 为什么返回 404 或模型不存在？
+
+优先检查：
+
+- 基础地址是否写成了 `https://smew.ai/v1`
+- 模型名是否就是你账号当前实际可调用的模型名
+- 默认模型是否写成 Hermes 当前支持的 GPT 模型
+
+## 7. API 验证示例
+
+```bash
+curl -X POST "https://smew.ai/v1/chat/completions" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your-key>" \
+  -d '{"model":"gpt-5.4","messages":[{"role":"user","content":"hi"}]}'
+```
+
+如果这个请求能正常返回，再回头检查 Hermes 配置，排障会更直接。

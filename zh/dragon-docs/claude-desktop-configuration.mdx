@@ -1,0 +1,78 @@
+---
+title: "第三方 Provider 配置指南"
+sidebarTitle: "第三方 Provider 配置指南"
+description: "桌面客户端第三方 Provider 配置指南"
+---
+
+# 第三方 Provider 配置指南
+
+本教程将指导你如何在支持自定义 Provider 的桌面客户端中配置第三方 API Provider，使其通过自定义网关连接到 SmewAI 等 AI 服务。
+
+## 前置准备
+
+在开始配置之前，请确保：
+
+1. 已下载并安装对应客户端
+2. 拥有第三方服务的 API Key
+3. 了解该服务的 Gateway 地址（Base URL）
+
+## macOS 配置流程
+
+### 第一步：启用开发者模式
+
+1. 打开桌面客户端
+2. 在菜单中找到 **Developer Mode** 或同类开发者入口
+3. 启用后按提示重启应用
+
+### 第二步：配置第三方接口
+
+1. 打开 **Configure Provider** 或同类配置面板
+2. 填写第三方接口信息。以 SmewAI 为例：
+
+| 配置项 | 值 |
+| --- | --- |
+| **Gateway base URL** | `https://smew.ai` |
+| **Gateway API key** | 你的 SmewAI API Key |
+
+3. 点击 **Apply locally** 或等效按钮
+4. 按提示重启应用
+
+### 功能验证
+
+配置完成后，可以通过简单对话验证连接是否成功。例如询问当前使用的模型，或发送一条 `你好` 测试是否能正常回复。
+
+### 高级配置
+
+#### 配置最高权限
+
+默认情况下，桌面客户端执行敏感操作时会弹出确认框。如需关闭确认提示，可在设置面板中调整权限级别。
+
+#### 保持电脑活跃
+
+执行长时间任务时，建议开启 **Keep computer awake** 或同类功能，防止电脑进入休眠状态导致任务中断。
+
+### 配置多个 Provider
+
+如果客户端支持多个第三方接口，可创建多套配置，分别保存不同网关地址和 API Key，方便在不同服务间切换。
+
+## Windows 配置流程
+
+Windows 端的配置逻辑与 macOS 基本一致，仅开发者模式的入口方式可能不同。一般流程如下：
+
+1. 打开桌面客户端
+2. 找到 **Developer** 或 **Third-party interface** 入口
+3. 填写 Gateway 地址和 API Key
+4. 点击 **Apply locally** 后重启生效
+
+## 常见问题
+
+| 问题 | 解决方案 |
+| --- | --- |
+| 配置后无法连接 | 检查 Gateway URL 是否以 `https://` 开头，API Key 是否有效 |
+| 切换 Provider 后失效 | 确保点击了 **Apply locally** 并重启应用 |
+| 权限不足无法执行命令 | 在设置中将权限级别调整为更高 |
+
+## 相关资源
+
+- [Codex 快速开始指南](/zh/dragon-docs/codex-quickstart)
+- [OpenAI Codex 项目](https://github.com/openai/codex)
